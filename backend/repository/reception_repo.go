@@ -23,6 +23,6 @@ func RegisterPatient(patient models.Patient) (models.Patient, error) {
 }
 
 func DeletePatientProfile(patientID uint) error {
-	result := database.DB.Delete(&models.User{}, patientID)
+	result := database.DB.Delete(&models.Patient{}, patientID)
 	return result.Error
 }
