@@ -6,4 +6,6 @@ type Patient struct {
 	Lastname  string `gorm:"lastname"`
 	Age       uint   `gorm:"age"`
 	Gender    string `gorm:"gender"`
+	// DoctorID
+	// MedicalNotes
 }
