@@ -74,3 +74,16 @@ func DeletePatientProfile(c *gin.Context) {
 
 	c.JSON(http.StatusOK, "Deleted Profile")
 }
+
+type UpdateBody struct {
+	field string `json:"field" binding:"required"`
+	value string `json:"value" binding:"required"`
+}
+
+func UpdateField(c *gin.Context) {
+	// pull out body
+
+	// pass in field and new value
+
+	// return updated patient entity
+}
