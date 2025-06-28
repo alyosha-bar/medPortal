@@ -36,7 +36,7 @@ func SetupRoutes(router *gin.Engine) {
 		// Update patient details --> simple changes
 		receptionistRoutes.PATCH("/details/update")
 
-		// UPDATE patient --> assign to doctor --> need to change DB schema
+		// UPDATE patient --> assign to doctor
 		receptionistRoutes.PATCH("/patient/assign")
 
 		// Delete patient profile
@@ -48,9 +48,9 @@ func SetupRoutes(router *gin.Engine) {
 	doctorsRoutes.Use(middleware.AuthMiddleware("doctor"))
 	{
 		// GET patients which belong to the doctor
-		doctorsRoutes.GET("/patients")
+		doctorsRoutes.GET("/patients", handlers.GetPatientsByDoctor)
 
-		// GET patient details
+		// GET patient details --> include medical notes
 		doctorsRoutes.GET("/patient/:patient_id")
 
 		// UPDATE patient record --> medical notes

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
+import RegisterModal from "./RegisterModal";
 
 interface Patient {
     ID: number,
@@ -12,10 +13,12 @@ interface Patient {
 
 
 const ReceptionHome = () => {
-    // import user info
-    const { user, token } = useAuth();
+    // import token for api request
+    const { token } = useAuth();
 
     const [patients, setPatients] = useState<Patient[]>([])
+    const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false)
+
 
     // view all patients
     const getAllPatients = async () => {
@@ -40,27 +43,63 @@ const ReceptionHome = () => {
         fetchPatients()
     }, [])
 
-
-    // specific patient
-    // register new patient
     
+    // register new patient
+    const registerPatient = async (newPatient: Omit<Patient, "ID">) => {
+        const response = await fetch(`/api/receptionist/register`, {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(newPatient)
+        });
+
+        const data = await response.json();
+        return data; 
+    };
+
+
+
+    const handleSubmit = async (newPatient: Omit<Patient, "ID">) => {
+        try {
+            const data = await registerPatient(newPatient);
+            console.log(data);
+        } catch (error) {
+            console.error("Registration failed:", error);
+        }
+    };
+
     
     // delete patient
 
     return ( 
-        <>
-            <div> Receptionist's Home Page </div>
-            <div> {user?.username} </div>
-            <div> {user?.role} </div>
-            <h2>Patient List</h2>
-            <ul>
-                {patients.map((patient) => (
-                <li key={patient.ID}>
+        <>  
+        <div>
+            <div className="patient-list-top">
+                <h2 className="patient-list-heading">Patient List</h2>
+                <button 
+                    onClick={() => setShowRegisterModal(!showRegisterModal)}
+                    className="register-btn">Register New Patient
+                </button>
+                {showRegisterModal && (
+                    <RegisterModal
+                        onClose={() => setShowRegisterModal(false)}
+                        onSubmit={handleSubmit}
+                    />
+                    )}
+            </div>
+            <ul className="patient-list">
+            {patients.map((patient) => (
+                <li key={patient.ID} className="patient-item">
+                <span>
                     {patient.Firstname} {patient.Lastname} — {patient.Age} years old ({patient.Gender})
-                    <Link to={`/patient/${patient.ID}`}> Details </Link>
+                </span>
+                <Link to={`/patient/${patient.ID}`} className="details-link">Details</Link>
                 </li>
-                ))}
+            ))}
             </ul>
+        </div>
         </>
     );
 }
