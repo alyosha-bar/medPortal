@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Role = "doctor" | "receptionist";
 
@@ -16,6 +16,8 @@ const Signup = () => {
         password: '',
         role: 'doctor'
     });
+
+    const navigate = useNavigate()
 
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +37,7 @@ const Signup = () => {
             sendSignup(formData)
 
             // redirect to login
-            redirect("/login")
+            navigate("/login")
             
         } catch (error) {
             console.error(error)
@@ -62,55 +64,58 @@ const Signup = () => {
 
     return (
         <>
-            <h2>Signup Form</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <h2 className="signup-title">Signup Form</h2>
+            <form onSubmit={handleSubmit} className="signup-form">
+                <div className="form-group">
                     <label htmlFor="username">Username: </label>
                     <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        required
+                    type="text"
+                    id="username"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="password">Password: </label>
                     <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
                     />
                 </div>
-                <div>
+                <div className="form-group role-group">
                     <label>Role: </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="role"
-                            value="doctor"
-                            checked={formData.role === "doctor"}
-                            onChange={handleChange}
-                        />
-                        Doctor
+                    <label className="radio-label">
+                    <input
+                        type="radio"
+                        name="role"
+                        value="doctor"
+                        checked={formData.role === "doctor"}
+                        onChange={handleChange}
+                    />
+                    Doctor
                     </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="role"
-                            value="receptionist"
-                            checked={formData.role === "receptionist"}
-                            onChange={handleChange}
-                        />
-                        Receptionist
+                    <label className="radio-label">
+                    <input
+                        type="radio"
+                        name="role"
+                        value="receptionist"
+                        checked={formData.role === "receptionist"}
+                        onChange={handleChange}
+                    />
+                    Receptionist
                     </label>
                 </div>
-                <button type="submit">Submit</button>
+                <button type="submit" className="submit-btn">Submit</button>
             </form>
+
         </>
     );
 };

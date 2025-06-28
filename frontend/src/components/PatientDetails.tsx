@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
+import AssignDoctorModal from "./AssignDoctorModal";
 
 interface Patient {
     ID: number,
@@ -8,6 +9,11 @@ interface Patient {
     Lastname: string,
     Age: number,
     Gender: string
+}
+
+interface Doctor {
+    ID: number,
+    Username: string
 }
 
 const PatientDetails = () => {
@@ -18,8 +24,10 @@ const PatientDetails = () => {
     let { id } = useParams()
 
     const [patient, setPatient] = useState<Patient>()
+    const [doctors, setDoctors] = useState<Doctor[]>([])
+    const [assignModal, setAssignModal] = useState<boolean>(false);
 
-    // view all patients
+    // get specific patient details
     const getPatientDetails = async () => {
         const response = await fetch(`/api/receptionist/patient/${id}`, {
             method: "GET",
@@ -33,6 +41,19 @@ const PatientDetails = () => {
         return data
     }
     
+    const getDoctorNames = async () => {
+        const response = await fetch(`/api/receptionist/doctors`, {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+
+        const data = await response.json()
+        return data
+    }
+
     useEffect(() => {
         const fetchPatient = async () => {
             const data = await getPatientDetails()
@@ -40,6 +61,15 @@ const PatientDetails = () => {
         }
 
         fetchPatient()
+    }, [])
+
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            const data = await getDoctorNames()
+            setDoctors(data)
+        }
+
+        fetchDoctors()
     }, [])
 
     // delete patient profile
@@ -51,6 +81,30 @@ const PatientDetails = () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 }
+            })
+
+            const data = await response.json()
+            console.log(data)
+
+            navigate("/reception")
+
+        } catch ( error ) {
+            console.error(error)
+        }
+    }
+
+    // assign doctor
+    const handleAssign = async (doctorID : number) => {
+        try {
+            const response = await fetch(`/api/receptionist/patient/assign/${patient?.ID}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    doctorID: doctorID
+                })
             })
 
             const data = await response.json()
@@ -77,9 +131,20 @@ const PatientDetails = () => {
                     {patient && 
                     <div className="btn-group">
                         <button className="update-btn">Update</button>
-                        <button className="assign-btn">Assign</button>
+                        <button onClick={() => {
+                            setAssignModal(!assignModal)
+                        }} className="assign-btn">Assign</button>
                         <button onClick={() => handleDelete(patient.ID)} className="delete-btn">Delete</button>
                     </div>}
+
+                    <AssignDoctorModal
+                        isOpen={assignModal}
+                        onClose={() => setAssignModal(false)}
+                        doctors={doctors}
+                        onAssign={(doctorId) => {
+                            handleAssign(doctorId)  
+                        }}
+                    />
                 </div>
             </div>
         </>

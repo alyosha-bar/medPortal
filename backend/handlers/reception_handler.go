@@ -87,3 +87,42 @@ func UpdateField(c *gin.Context) {
 
 	// return updated patient entity
 }
+
+func GetAllDoctors(c *gin.Context) {
+	doctors, err := services.GetAllDoctors()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch doctors"})
+		return
+	}
+
+	c.JSON(http.StatusOK, doctors)
+}
+
+type AssignBody struct {
+	DoctorID uint `json:"doctorID"`
+}
+
+func AssignPatient(c *gin.Context) {
+	// Extract patientID from URL parameters
+	patientIDStr := c.Param("patient_id")
+	patientID, err := strconv.ParseUint(patientIDStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid patient ID"})
+		return
+	}
+
+	// extract body
+	var body AssignBody
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid body"})
+		return
+	}
+
+	patient, err := services.AssignPatient(uint(patientID), uint(body.DoctorID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get patient details"})
+		return
+	}
+
+	c.JSON(http.StatusOK, patient)
+}

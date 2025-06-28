@@ -4,6 +4,11 @@ import (
 	"github.com/alyosha-bar/medPortal/handlers"
 	"github.com/alyosha-bar/medPortal/middleware"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/alyosha-bar/medPortal/cmd/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRoutes(router *gin.Engine) {
@@ -33,11 +38,14 @@ func SetupRoutes(router *gin.Engine) {
 		// CREATE NEW patient
 		receptionistRoutes.POST("/register", handlers.RegisterPatient)
 
-		// Update patient details --> simple changes
+		// Update patient details --> simple changes to profile
 		receptionistRoutes.PATCH("/details/update")
 
 		// UPDATE patient --> assign to doctor
-		receptionistRoutes.PATCH("/patient/assign")
+		receptionistRoutes.PATCH("/patient/assign/:patient_id", handlers.AssignPatient)
+
+		// GET all doctor names --> used for the endpoint above feature
+		receptionistRoutes.GET("/doctors", handlers.GetAllDoctors)
 
 		// Delete patient profile
 		receptionistRoutes.DELETE("/patient/:patient_id", handlers.DeletePatientProfile)
@@ -50,11 +58,12 @@ func SetupRoutes(router *gin.Engine) {
 		// GET patients which belong to the doctor
 		doctorsRoutes.GET("/patients", handlers.GetPatientsByDoctor)
 
-		// GET patient details --> include medical notes
-		doctorsRoutes.GET("/patient/:patient_id")
-
 		// UPDATE patient record --> medical notes
+		doctorsRoutes.PATCH("/patient/:patient_id", handlers.UpdateMedicalNotes)
 
 	}
+
+	// Serve Swagger UI
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 }

@@ -52,9 +52,9 @@ const DoctorHome = () => {
             {patients.map((patient) => (
                 <li key={patient.ID} className="patient-item">
                 <span>
-                    {patient.Firstname} {patient.Lastname} — {patient.Age} years old ({patient.Gender})
+                    {patient.Firstname} {patient.Lastname} - {patient.Age} years old ({patient.Gender})
                 </span>
-                <Link to={`/patient/${patient.ID}`} className="details-link">Details</Link>
+                <button className="notes-btn"> Medical Notes </button>
                 </li>
             ))}
             </ul>

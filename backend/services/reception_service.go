@@ -20,3 +20,11 @@ func RegisterPatient(patient models.Patient) (models.Patient, error) {
 func DeletePatientProfile(patientID uint) error {
 	return repository.DeletePatientProfile(patientID)
 }
+
+func GetAllDoctors() ([]models.User, error) {
+	return repository.GetAllDoctors()
+}
+
+func AssignPatient(patientID uint, doctorID uint) (models.Patient, error) {
+	return repository.AssignPatient(patientID, doctorID)
+}

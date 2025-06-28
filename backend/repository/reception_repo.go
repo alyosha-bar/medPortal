@@ -26,3 +26,29 @@ func DeletePatientProfile(patientID uint) error {
 	result := database.DB.Delete(&models.Patient{}, patientID)
 	return result.Error
 }
+
+func GetAllDoctors() ([]models.User, error) {
+	var doctors []models.User
+	result := database.DB.Select("id, username").Where("role = ?", "doctor").Find(&doctors)
+	return doctors, result.Error
+}
+
+func AssignPatient(patientID uint, doctorID uint) (models.Patient, error) {
+	var patient models.Patient
+
+	result := database.DB.Model(&patient).
+		Where("id = ?", patientID).
+		Update("doctor_id", doctorID)
+
+	if result.Error != nil {
+		return patient, result.Error
+	}
+
+	// Fetch the updated patient record to return
+	err := database.DB.First(&patient, patientID).Error
+	if err != nil {
+		return patient, err
+	}
+
+	return patient, nil
+}

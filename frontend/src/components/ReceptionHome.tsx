@@ -93,7 +93,7 @@ const ReceptionHome = () => {
             {patients.map((patient) => (
                 <li key={patient.ID} className="patient-item">
                 <span>
-                    {patient.Firstname} {patient.Lastname} — {patient.Age} years old ({patient.Gender})
+                    {patient.Firstname} {patient.Lastname} - {patient.Age} years old ({patient.Gender})
                 </span>
                 <Link to={`/patient/${patient.ID}`} className="details-link">Details</Link>
                 </li>

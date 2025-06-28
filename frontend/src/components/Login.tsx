@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { Role } from "../types/auth";
 import { useAuth } from "../hooks/useAuth";
 
@@ -78,32 +78,33 @@ const Login = () => {
 
     return (
         <>
-            <button onClick={() => console.log(isAuthenticated)}> Is Authenticated </button>
-            <h2>Login Form</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <h2 className="login-title">Login Form</h2>
+            <form onSubmit={handleSubmit} className="login-form">
+                <div className="form-group">
                     <label htmlFor="username">Username: </label>
                     <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        required
+                    type="text"
+                    id="username"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="password">Password: </label>
                     <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
                     />
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit" className="submit-btn">Login</button>
             </form>
         </>
     );

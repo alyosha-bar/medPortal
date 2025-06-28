@@ -1,0 +1,16 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is my Receptionist's and Doctor's API in Golang",
+        "title": "medPortal API",
+        "contact": {
+            "name": "Aleksej Barysnikov",
+            "url": "https://aleksejbarysnikov.netlify.app/",
+            "email": "alohahoy@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {}
+}
