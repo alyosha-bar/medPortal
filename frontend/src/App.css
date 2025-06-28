@@ -337,7 +337,6 @@
   gap: 1rem;
 }
 
-/* Base button styling */
 .btn-group button {
   border: none;
   padding: 0.6rem 1.2rem;
@@ -347,7 +346,6 @@
   color: white;
 }
 
-/* Update - Blue */
 .update-btn {
   background-color: #007BFF;
 }
@@ -356,7 +354,6 @@
   background-color: #005FCC;
 }
 
-/* Assign - Gold */
 .assign-btn {
   background-color: #FFC107;
   color: black;
@@ -366,7 +363,6 @@
   background-color: #e0a800;
 }
 
-/* Delete - Red */
 .delete-btn {
   background-color: #DC3545;
 }
