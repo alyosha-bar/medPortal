@@ -7,7 +7,7 @@
 // @contact.email  alohahoy@gmail.com
 
 // @host      localhost:8080
-// @BasePath  /api/v1
+// @BasePath  /
 
 package main
 
@@ -15,16 +15,24 @@ import (
 	"github.com/alyosha-bar/medPortal/database"
 	"github.com/alyosha-bar/medPortal/routes"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/alyosha-bar/medPortal/cmd/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
+
 	// connect to DB
 	database.ConnectDB()
 
-	// initialise middleware
-
 	// Set Up GIN router
 	router := gin.Default()
+
+	// Serve Swagger UI
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	routes.SetupRoutes(router)
 
 	// start server

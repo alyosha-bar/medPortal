@@ -37,7 +37,7 @@ const ReceptionHome = () => {
     useEffect(() => {
         const fetchPatients = async () => {
             const data = await getAllPatients()
-            setPatients(data)
+            setPatients(data.data)
         }
 
         fetchPatients()
@@ -70,8 +70,6 @@ const ReceptionHome = () => {
         }
     };
 
-    
-    // delete patient
 
     return ( 
         <>  
@@ -90,7 +88,7 @@ const ReceptionHome = () => {
                     )}
             </div>
             <ul className="patient-list">
-            {patients.map((patient) => (
+            {patients && patients.map((patient) => (
                 <li key={patient.ID} className="patient-item">
                 <span>
                     {patient.Firstname} {patient.Lastname} - {patient.Age} years old ({patient.Gender})

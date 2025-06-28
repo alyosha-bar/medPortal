@@ -4,11 +4,6 @@ import (
 	"github.com/alyosha-bar/medPortal/handlers"
 	"github.com/alyosha-bar/medPortal/middleware"
 	"github.com/gin-gonic/gin"
-
-	_ "github.com/alyosha-bar/medPortal/cmd/docs"
-
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRoutes(router *gin.Engine) {
@@ -62,8 +57,4 @@ func SetupRoutes(router *gin.Engine) {
 		doctorsRoutes.PATCH("/patient/:patient_id", handlers.UpdateMedicalNotes)
 
 	}
-
-	// Serve Swagger UI
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 }

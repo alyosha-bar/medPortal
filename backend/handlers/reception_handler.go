@@ -10,6 +10,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type ManyPatientResponse struct {
+	Data []models.Patient `json:"data"`
+}
+
+type OnePatientResponse struct {
+	Data models.Patient `json:"data"`
+}
+
+// GetAllPatients
+// @Summary Gets All Patients
+// @Description Lists all patients
+// @Tags Receptionist
+// @Success 200 {object} ManyPatientResponse
+// @Router /api/v1/receptionist/patients [get]
 func GetAllPatients(c *gin.Context) {
 
 	patients, err := services.GetAllPatients()
@@ -18,7 +32,7 @@ func GetAllPatients(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, patients)
+	c.JSON(http.StatusOK, ManyPatientResponse{Data: patients})
 }
 
 func GetPatient(c *gin.Context) {
