@@ -27,6 +27,21 @@ func DeletePatientProfile(patientID uint) error {
 	return result.Error
 }
 
+func UpdateField(patientID uint, field string, value interface{}) (models.Patient, error) {
+	var patient models.Patient
+
+	// Perform update
+	if err := database.DB.Model(&models.Patient{}).
+		Where("id = ?", patientID).
+		Update(field, value).Error; err != nil {
+		return patient, err
+	}
+
+	// Return updated patient
+	err := database.DB.First(&patient, patientID).Error
+	return patient, err
+}
+
 func GetAllDoctors() ([]models.User, error) {
 	var doctors []models.User
 	result := database.DB.Select("id, username").Where("role = ?", "doctor").Find(&doctors)

@@ -414,3 +414,46 @@
   background-color: lightgrey;
   color: #000000;
 }
+
+/* Update Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.modal h3 {
+  margin-bottom: 1rem;
+}
+
+.modal label {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 0.4rem;
+  margin-top: 0.2rem;
+}
+
+.modal-buttons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+

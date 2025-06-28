@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignDoctorModal from "./AssignDoctorModal";
+import UpdateFieldModal from "./UpdateFieldModal";
 
 interface Patient {
     ID: number,
@@ -26,6 +27,7 @@ const PatientDetails = () => {
     const [patient, setPatient] = useState<Patient>()
     const [doctors, setDoctors] = useState<Doctor[]>([])
     const [assignModal, setAssignModal] = useState<boolean>(false);
+    const [updateModal, setUpdateModal] = useState<boolean>(false);
 
     // get specific patient details
     const getPatientDetails = async () => {
@@ -117,6 +119,32 @@ const PatientDetails = () => {
         }
     }
 
+
+    // update simple fields
+    const handleUpdate = async (field: string, value: string) => {
+        try {
+            const response = await fetch(`/api/receptionist//details/update/${patient?.ID}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    field: field,
+                    value: value
+                })
+            })
+
+            const data = await response.json()
+            console.log(data)
+
+            navigate("/reception")
+
+        } catch ( error ) {
+            console.error(error)
+        }
+    }
+
     return (
         <>
             <div>
@@ -130,7 +158,9 @@ const PatientDetails = () => {
 
                     {patient && 
                     <div className="btn-group">
-                        <button className="update-btn">Update</button>
+                        <button onClick={() => {
+                            setUpdateModal(!updateModal)
+                        }}className="update-btn">Update</button>
                         <button onClick={() => {
                             setAssignModal(!assignModal)
                         }} className="assign-btn">Assign</button>
@@ -144,6 +174,12 @@ const PatientDetails = () => {
                         onAssign={(doctorId) => {
                             handleAssign(doctorId)  
                         }}
+                    />
+
+                    <UpdateFieldModal
+                        isOpen={updateModal}
+                        onClose={() => setUpdateModal(false)}
+                        onSubmit={handleUpdate}
                     />
                 </div>
             </div>

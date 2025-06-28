@@ -21,6 +21,10 @@ func DeletePatientProfile(patientID uint) error {
 	return repository.DeletePatientProfile(patientID)
 }
 
+func UpdateField(patientID uint, field string, value interface{}) (models.Patient, error) {
+	return repository.UpdateField(patientID, field, value)
+}
+
 func GetAllDoctors() ([]models.User, error) {
 	return repository.GetAllDoctors()
 }

@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/alyosha-bar/medPortal/models"
 	"github.com/alyosha-bar/medPortal/services"
@@ -76,16 +77,58 @@ func DeletePatientProfile(c *gin.Context) {
 }
 
 type UpdateBody struct {
-	field string `json:"field" binding:"required"`
-	value string `json:"value" binding:"required"`
+	Field string `json:"field" binding:"required"`
+	Value string `json:"value" binding:"required"`
 }
 
 func UpdateField(c *gin.Context) {
-	// pull out body
+	// Parse patient ID from URL parameters
+	patientIDStr := c.Param("patient_id")
+	patientID, err := strconv.ParseUint(patientIDStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid patient ID"})
+		return
+	}
 
-	// pass in field and new value
+	// bind body
+	var body UpdateBody
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input format"})
+		return
+	}
 
-	// return updated patient entity
+	// validate allowed fields
+	allowedFields := map[string]bool{
+		"firstname":     true,
+		"lastname":      true,
+		"age":           true,
+		"gender":        true,
+		"medical_notes": true,
+	}
+	field := strings.ToLower(body.Field)
+	if !allowedFields[field] {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "field update not allowed"})
+		return
+	}
+
+	// handle type conversion
+	var value interface{} = body.Value
+	if field == "age" {
+		ageInt, err := strconv.Atoi(body.Value)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid age value"})
+			return
+		}
+		value = ageInt
+	}
+
+	patient, err := services.UpdateField(uint(patientID), field, value)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update patient"})
+		return
+	}
+
+	c.JSON(http.StatusOK, patient)
 }
 
 func GetAllDoctors(c *gin.Context) {

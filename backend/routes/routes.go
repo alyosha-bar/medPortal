@@ -39,7 +39,7 @@ func SetupRoutes(router *gin.Engine) {
 		receptionistRoutes.POST("/register", handlers.RegisterPatient)
 
 		// Update patient details --> simple changes to profile
-		receptionistRoutes.PATCH("/details/update")
+		receptionistRoutes.PATCH("/details/update/:patient_id", handlers.UpdateField)
 
 		// UPDATE patient --> assign to doctor
 		receptionistRoutes.PATCH("/patient/assign/:patient_id", handlers.AssignPatient)
