@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Role } from "../types/auth";
 import { useAuth } from "../hooks/useAuth";
+import { API_BASE } from "../api/config";
 
 interface LoginFormData {
     username: string;
@@ -62,7 +63,7 @@ const Login = () => {
     };
 
     const sendLogin = async (formData : LoginFormData) => {
-        const response = await fetch(`/api/auth/login`, {
+        const response = await fetch(`${API_BASE}/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

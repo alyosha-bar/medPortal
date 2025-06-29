@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import NotesModal from "./NotesModal";
+import { API_BASE } from "../api/config";
 
 interface Patient {
     ID: number,
@@ -13,7 +14,7 @@ interface Patient {
 
 const DoctorHome = () => {
 
-     // import token for api request
+    // import token for api request
     const { token } = useAuth();
 
     const [patients, setPatients] = useState<Patient[]>([])
@@ -28,7 +29,7 @@ const DoctorHome = () => {
 
 
     const getAllPatients = async () => {
-        const response = await fetch("/api/doctor/patients", {
+        const response = await fetch(`${API_BASE}/doctor/patients`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -52,7 +53,7 @@ const DoctorHome = () => {
     // update medical notes fields
     const handleSaveNotes = async (updatedNotes: string, patientID: number) => {
         try {
-            const response = await fetch(`/api/doctor/patient/${patientID}`, {
+            const response = await fetch(`${API_BASE}/doctor/patient/${patientID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

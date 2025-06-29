@@ -11,7 +11,7 @@ interface AuthContextType {
   login: (user: User, token: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
-  isLoading: boolean; // ✅ NEW
+  isLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,7 +19,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setAuthToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // ✅ NEW
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = getToken();
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(JSON.parse(storedUser));
     }
 
-    setIsLoading(false); // ✅ Finish init
+    setIsLoading(false); 
   }, []);
 
   const login = (user: User, token: string) => {

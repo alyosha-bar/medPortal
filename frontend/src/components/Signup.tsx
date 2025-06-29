@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../api/config";
 
 type Role = "doctor" | "receptionist";
 
@@ -49,7 +50,7 @@ const Signup = () => {
     };
 
     const sendSignup = async (formData : SignupFormData) => {
-        const response = await fetch(`/api/auth/signup`, {
+        const response = await fetch(`${API_BASE}/auth/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

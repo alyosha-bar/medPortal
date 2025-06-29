@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
 import AssignDoctorModal from "./AssignDoctorModal";
 import UpdateFieldModal from "./UpdateFieldModal";
+import { API_BASE } from "../api/config";
 
 interface Patient {
     ID: number,
@@ -123,7 +124,7 @@ const PatientDetails = () => {
     // update simple fields
     const handleUpdate = async (field: string, value: string) => {
         try {
-            const response = await fetch(`/api/receptionist//details/update/${patient?.ID}`, {
+            const response = await fetch(`${API_BASE}/receptionist//details/update/${patient?.ID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

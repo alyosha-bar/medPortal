@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 import RegisterModal from "./RegisterModal";
+import { API_BASE } from "../api/config";
 
 interface Patient {
     ID: number,
@@ -22,7 +23,7 @@ const ReceptionHome = () => {
 
     // view all patients
     const getAllPatients = async () => {
-        const response = await fetch("/api/receptionist/patients", {
+        const response = await fetch(`${API_BASE}/receptionist/patients`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -46,7 +47,7 @@ const ReceptionHome = () => {
     
     // register new patient
     const registerPatient = async (newPatient: Omit<Patient, "ID">) => {
-        const response = await fetch(`/api/receptionist/register`, {
+        const response = await fetch(`${API_BASE}/receptionist/register`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",

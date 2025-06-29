@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/alyosha-bar/medPortal/models"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -14,10 +15,13 @@ var DB *gorm.DB
 
 func ConnectDB() {
 	// load .env
-	// err := godotenv.Load("../.env")
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+		// Only load .env file locally
+		err := godotenv.Load("../.env")
+		if err != nil {
+			log.Println("Warning: .env file not found (expected in local dev only)")
+		}
+	}
 
 	// get connection string
 	connStr, exists := os.LookupEnv("DB_URL")

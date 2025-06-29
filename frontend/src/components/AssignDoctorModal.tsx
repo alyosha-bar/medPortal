@@ -24,7 +24,7 @@ const AssignDoctorModal: React.FC<AssignDoctorModalProps> = ({
     e.preventDefault();
     if (selectedDoctorId !== null) {
       onAssign(selectedDoctorId);
-      onClose(); // close the modal after assignment
+      onClose();
     }
   };
 
