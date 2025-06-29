@@ -1,4 +1,7 @@
 # MedPortal Project
+## Deployment Link
+
+*https://diligent-perception-production.up.railway.app/*
 
 ## Technology Stack
 
@@ -31,4 +34,5 @@ The project follows a **Repository Design Pattern** with clear separation of con
 ## Video Link
 
 *(Add video link here)*
+
 
