@@ -1,4 +1,7 @@
 # MedPortal Project
+## Deployment Link
+
+*https://diligent-perception-production.up.railway.app/*
 
 ## Technology Stack
 
@@ -25,10 +28,11 @@ The project follows a **Repository Design Pattern** with clear separation of con
 
 ## Documentation
 
-- API documentation is available via **Swagger**, providing an interactive overview of all routes  
+- API documentation is available at [API Documentation](https://solar-flare-912061.postman.co/workspace/My-Workspace~4c0d0c05-bc59-4f02-876f-ff184cd7c804/collection/29570289-8c567590-464f-49dc-bce7-7832f5f246fb?action=share&source=copy-link&creator=29570289) via Postman 
 - Additional project details are documented in this README file  
 
 ## Video Link
 
 *(Add video link here)*
+
 
