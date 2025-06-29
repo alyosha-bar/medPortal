@@ -18,11 +18,6 @@ import (
 	"github.com/alyosha-bar/medPortal/routes"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-
-	_ "github.com/alyosha-bar/medPortal/cmd/docs"
-
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -41,9 +36,6 @@ func main() {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
-
-	// Serve Swagger UI
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	routes.SetupRoutes(router)
 

@@ -15,17 +15,6 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-// Login godoc
-// @Summary Authenticate a user
-// @Description Logs in a user and returns an authentication token.
-// @Tags auth
-// @Accept  json
-// @Produce json
-// @Param   credentials body LoginRequest true "Login Credentials"
-// @Success 200 {object} LoginResponse "Successful login"
-// @Failure 400 {object} map[string]string "message:Invalid input"
-// @Failure 401 {object} map[string]string "message:Invalid credentials"
-// @Router /auth/login [post]
 func Login(c *gin.Context) {
 	// decode username & password
 	var credentials LoginInput
