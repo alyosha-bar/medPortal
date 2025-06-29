@@ -32,7 +32,7 @@ const PatientDetails = () => {
 
     // get specific patient details
     const getPatientDetails = async () => {
-        const response = await fetch(`/api/receptionist/patient/${id}`, {
+        const response = await fetch(`${API_BASE}receptionist/patient/${id}`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -45,7 +45,7 @@ const PatientDetails = () => {
     }
     
     const getDoctorNames = async () => {
-        const response = await fetch(`/api/receptionist/doctors`, {
+        const response = await fetch(`${API_BASE}/receptionist/doctors`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -78,7 +78,7 @@ const PatientDetails = () => {
     // delete patient profile
     const handleDelete = async (ID: number) => {
         try {
-            const response = await fetch(`/api/receptionist/patient/${ID}`, {
+            const response = await fetch(`${API_BASE}/receptionist/patient/${ID}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -99,7 +99,7 @@ const PatientDetails = () => {
     // assign doctor
     const handleAssign = async (doctorID : number) => {
         try {
-            const response = await fetch(`/api/receptionist/patient/assign/${patient?.ID}`, {
+            const response = await fetch(`${API_BASE}/receptionist/patient/assign/${patient?.ID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
