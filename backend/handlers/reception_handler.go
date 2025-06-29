@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/alyosha-bar/medPortal/models"
-	"github.com/alyosha-bar/medPortal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,33 +17,42 @@ type OnePatientResponse struct {
 	Data models.Patient `json:"data"`
 }
 
-// GetAllPatients
-// @Summary Gets All Patients
-// @Description Lists all patients
-// @Tags Receptionist
-// @Success 200 {object} ManyPatientResponse
-// @Router /api/v1/receptionist/patients [get]
-func GetAllPatients(c *gin.Context) {
+type ReceptionService interface {
+	GetAllPatients() ([]models.Patient, error)
+	GetPatient(patientID uint) (models.Patient, error)
+	RegisterPatient(patient models.Patient) (models.Patient, error)
+	DeletePatientProfile(patientID uint) error
+	UpdateField(patientID uint, field string, value interface{}) (models.Patient, error)
+	GetAllDoctors() ([]models.User, error)
+	AssignPatient(patientID uint, doctorID uint) (models.Patient, error)
+}
 
-	patients, err := services.GetAllPatients()
+type ReceptionHandler struct {
+	Service ReceptionService
+}
+
+func NewReceptionHandler(service ReceptionService) *ReceptionHandler {
+	return &ReceptionHandler{Service: service}
+}
+
+func (h *ReceptionHandler) GetAllPatients(c *gin.Context) {
+	patients, err := h.Service.GetAllPatients()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch patients"})
 		return
 	}
-
 	c.JSON(http.StatusOK, ManyPatientResponse{Data: patients})
 }
 
-func GetPatient(c *gin.Context) {
+func (h *ReceptionHandler) GetPatient(c *gin.Context) {
 	patientIDStr := c.Param("patient_id")
-
 	patientID, err := strconv.ParseUint(patientIDStr, 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid patient id"})
 		return
 	}
 
-	patient, err := services.GetPatient(uint(patientID))
+	patient, err := h.Service.GetPatient(uint(patientID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get patient details"})
 		return
@@ -53,35 +61,31 @@ func GetPatient(c *gin.Context) {
 	c.JSON(http.StatusOK, patient)
 }
 
-func RegisterPatient(c *gin.Context) {
-	// bind JSON to patient object
+func (h *ReceptionHandler) RegisterPatient(c *gin.Context) {
 	var patient models.Patient
-
-	err := c.ShouldBindJSON(&patient)
-	if err != nil {
+	if err := c.ShouldBindJSON(&patient); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid patient data"})
 		return
 	}
 
-	patient_return, err := services.RegisterPatient(patient)
+	patientReturn, err := h.Service.RegisterPatient(patient)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to register patient"})
 		return
 	}
 
-	c.JSON(http.StatusOK, patient_return)
+	c.JSON(http.StatusOK, patientReturn)
 }
 
-func DeletePatientProfile(c *gin.Context) {
+func (h *ReceptionHandler) DeletePatientProfile(c *gin.Context) {
 	patientIDStr := c.Param("patient_id")
-
 	patientID, err := strconv.ParseUint(patientIDStr, 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid patient id"})
 		return
 	}
 
-	err = services.DeletePatientProfile(uint(patientID))
+	err = h.Service.DeletePatientProfile(uint(patientID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete patient profile"})
 		return
@@ -95,8 +99,7 @@ type UpdateBody struct {
 	Value string `json:"value" binding:"required"`
 }
 
-func UpdateField(c *gin.Context) {
-	// Parse patient ID from URL parameters
+func (h *ReceptionHandler) UpdateField(c *gin.Context) {
 	patientIDStr := c.Param("patient_id")
 	patientID, err := strconv.ParseUint(patientIDStr, 10, 64)
 	if err != nil {
@@ -104,14 +107,12 @@ func UpdateField(c *gin.Context) {
 		return
 	}
 
-	// bind body
 	var body UpdateBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input format"})
 		return
 	}
 
-	// validate allowed fields
 	allowedFields := map[string]bool{
 		"firstname":     true,
 		"lastname":      true,
@@ -125,7 +126,6 @@ func UpdateField(c *gin.Context) {
 		return
 	}
 
-	// handle type conversion
 	var value interface{} = body.Value
 	if field == "age" {
 		ageInt, err := strconv.Atoi(body.Value)
@@ -136,7 +136,7 @@ func UpdateField(c *gin.Context) {
 		value = ageInt
 	}
 
-	patient, err := services.UpdateField(uint(patientID), field, value)
+	patient, err := h.Service.UpdateField(uint(patientID), field, value)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update patient"})
 		return
@@ -145,8 +145,8 @@ func UpdateField(c *gin.Context) {
 	c.JSON(http.StatusOK, patient)
 }
 
-func GetAllDoctors(c *gin.Context) {
-	doctors, err := services.GetAllDoctors()
+func (h *ReceptionHandler) GetAllDoctors(c *gin.Context) {
+	doctors, err := h.Service.GetAllDoctors()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch doctors"})
 		return
@@ -159,8 +159,7 @@ type AssignBody struct {
 	DoctorID uint `json:"doctorID"`
 }
 
-func AssignPatient(c *gin.Context) {
-	// Extract patientID from URL parameters
+func (h *ReceptionHandler) AssignPatient(c *gin.Context) {
 	patientIDStr := c.Param("patient_id")
 	patientID, err := strconv.ParseUint(patientIDStr, 10, 32)
 	if err != nil {
@@ -168,16 +167,15 @@ func AssignPatient(c *gin.Context) {
 		return
 	}
 
-	// extract body
 	var body AssignBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid body"})
 		return
 	}
 
-	patient, err := services.AssignPatient(uint(patientID), uint(body.DoctorID))
+	patient, err := h.Service.AssignPatient(uint(patientID), body.DoctorID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get patient details"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to assign patient"})
 		return
 	}
 

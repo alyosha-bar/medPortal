@@ -1,19 +1,27 @@
 package repository
 
 import (
-	"github.com/alyosha-bar/medPortal/database"
 	"github.com/alyosha-bar/medPortal/models"
+	"gorm.io/gorm"
 )
 
-func SignUp(user models.User) error {
-	result := database.DB.Create(&user)
+type AuthRepo struct {
+	DB *gorm.DB
+}
+
+func NewAuthRepo(db *gorm.DB) *AuthRepo {
+	return &AuthRepo{DB: db}
+}
+
+func (r *AuthRepo) SignUp(user models.User) error {
+	result := r.DB.Create(&user)
 	return result.Error
 }
 
-func GetUserByUsername(username string) (models.User, error) {
+func (r *AuthRepo) GetUserByUsername(username string) (models.User, error) {
 	var user models.User
 
-	if err := database.DB.Where("username = ?", username).First(&user).Error; err != nil {
+	if err := r.DB.Where("username = ?", username).First(&user).Error; err != nil {
 		return models.User{}, err
 	}
 

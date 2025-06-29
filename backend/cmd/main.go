@@ -1,14 +1,3 @@
-// @title           medPortal API
-// @version         1.0
-// @description     This is my Receptionist's and Doctor's API in Golang
-
-// @contact.name   Aleksej Barysnikov
-// @contact.url    https://aleksejbarysnikov.netlify.app/
-// @contact.email  alohahoy@gmail.com
-
-// @host      localhost:8080
-// @BasePath  /
-
 package main
 
 import (

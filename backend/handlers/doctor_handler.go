@@ -4,11 +4,24 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/alyosha-bar/medPortal/services"
+	"github.com/alyosha-bar/medPortal/models"
 	"github.com/gin-gonic/gin"
 )
 
-func GetPatientsByDoctor(c *gin.Context) {
+type DoctorService interface {
+	GetPatientsByDoctor(doctorID uint) ([]models.Patient, error)
+	UpdateMedicalNotes(doctorID uint, patientID uint, medicalNotes string) (models.Patient, error)
+}
+
+type DoctorHandler struct {
+	Service DoctorService
+}
+
+func NewDoctorHandler(service DoctorService) *DoctorHandler {
+	return &DoctorHandler{Service: service}
+}
+
+func (h *DoctorHandler) GetPatientsByDoctor(c *gin.Context) {
 
 	// extract user id (doctor id)
 	userIDVal, exists := c.Get("user_id")
@@ -28,7 +41,7 @@ func GetPatientsByDoctor(c *gin.Context) {
 	}
 
 	// call services to fetch patients
-	patients, err := services.GetPatientsByDoctor(userID)
+	patients, err := h.Service.GetPatientsByDoctor(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch patients"})
 		return
@@ -37,11 +50,11 @@ func GetPatientsByDoctor(c *gin.Context) {
 	c.JSON(http.StatusOK, patients)
 }
 
-type updateInput struct {
+type UpdateInput struct {
 	MedicalNotes string `json:"medicalNotes"`
 }
 
-func UpdateMedicalNotes(c *gin.Context) {
+func (h *DoctorHandler) UpdateMedicalNotes(c *gin.Context) {
 	// extract user id (doctor id)
 	userIDVal, exists := c.Get("user_id")
 	if !exists {
@@ -61,7 +74,7 @@ func UpdateMedicalNotes(c *gin.Context) {
 		return
 	}
 
-	var body updateInput
+	var body UpdateInput
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "notes not provided."})
 		return
@@ -76,7 +89,7 @@ func UpdateMedicalNotes(c *gin.Context) {
 	patientID := uint(patientID64)
 
 	// pass into services
-	patient, err := services.UpdateMedicalNotes(userID, patientID, body.MedicalNotes)
+	patient, err := h.Service.UpdateMedicalNotes(userID, patientID, body.MedicalNotes)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update patient"})
 		return

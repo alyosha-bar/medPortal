@@ -5,10 +5,18 @@ import (
 	"github.com/alyosha-bar/medPortal/repository"
 )
 
-func GetPatientsByDoctor(doctorID uint) ([]models.Patient, error) {
-	return repository.GetPatientsByDoctor(doctorID)
+type DoctorService struct {
+	Repo *repository.DoctorRepo
 }
 
-func UpdateMedicalNotes(doctorID uint, patientID uint, medicalNotes string) (models.Patient, error) {
-	return repository.UpdateMedicalNotes(doctorID, patientID, medicalNotes)
+func NewDoctorService(repo *repository.DoctorRepo) *DoctorService {
+	return &DoctorService{Repo: repo}
+}
+
+func (s *DoctorService) GetPatientsByDoctor(doctorID uint) ([]models.Patient, error) {
+	return s.Repo.GetPatientsByDoctor(doctorID)
+}
+
+func (s *DoctorService) UpdateMedicalNotes(doctorID uint, patientID uint, medicalNotes string) (models.Patient, error) {
+	return s.Repo.UpdateMedicalNotes(doctorID, patientID, medicalNotes)
 }
