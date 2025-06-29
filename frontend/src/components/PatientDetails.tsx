@@ -32,7 +32,7 @@ const PatientDetails = () => {
 
     // get specific patient details
     const getPatientDetails = async () => {
-        const response = await fetch(`${API_BASE}receptionist/patient/${id}`, {
+        const response = await fetch(`${API_BASE}/receptionist/patient/${id}`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -124,7 +124,7 @@ const PatientDetails = () => {
     // update simple fields
     const handleUpdate = async (field: string, value: string) => {
         try {
-            const response = await fetch(`${API_BASE}/receptionist//details/update/${patient?.ID}`, {
+            const response = await fetch(`${API_BASE}/receptionist/details/update/${patient?.ID}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
