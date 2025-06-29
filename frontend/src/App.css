@@ -521,3 +521,39 @@
 .diagnosis * {
   padding: 5px;
 }
+
+/* Home */
+
+.home-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #fafafa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.welcome-title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.welcome-message {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.dashboard-link {
+  margin-left: 8px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.dashboard-link:hover {
+  text-decoration: underline;
+}
