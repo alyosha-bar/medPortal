@@ -24,7 +24,9 @@ The project follows a **Repository Design Pattern** with clear separation of con
 
 ## Testing
 
-*(Add testing details here if available)*
+- Testing was done using **SQLMock**, **Mockgen** and **Gomock**.
+- I tested the handler and repository layers because the services simply called the repository function.
+- Tests can be found in `/backend/tests` directory
 
 ## Documentation
 
@@ -33,6 +35,7 @@ The project follows a **Repository Design Pattern** with clear separation of con
 
 ## Video Link
 
-*(Add video link here)*
+[Demo Video](https://youtu.be/olnGinNQUKs)
+- Video was recording before testing and API docs were finished. Although functionality did not change some code snippets from the video are different than in the finished GitHub Repo
 
 
