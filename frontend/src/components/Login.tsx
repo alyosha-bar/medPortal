@@ -74,8 +74,6 @@ const Login = () => {
         return data
     }
 
-    const { isAuthenticated } = useAuth()
-
     return (
         <>
             <h2 className="login-title">Login Form</h2>

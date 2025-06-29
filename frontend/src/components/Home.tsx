@@ -3,9 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 const Home = () => {
 
     // import user info
-    const { user, isAuthenticated, logout } = useAuth();
-
-    // based on role redirect to receptionist home or doctor's home
+    const { user } = useAuth();
 
     return ( 
         <>
